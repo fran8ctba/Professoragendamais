@@ -25,7 +25,7 @@ public class TestePacienteController
         // Pré Teste
         //
         // Criar um paciente
-        Paciente tPacienteA = new Paciente(0, "Yerlandia Westrocia", LocalDate.of(1978, 8, 29), 3456767, "yerla@gmail.com", 37834534452L);
+        Paciente tPacienteA = new Paciente(0, "landia@hotmail.com", "jurubeba", "Yerlandia Westrocia", LocalDate.of(1978, 8, 29), 3456767,  37834534452L);
 
         // Criando o objeto de persistência
         PacienteDao tPacienteDao = new PacienteDao();
@@ -40,7 +40,7 @@ public class TestePacienteController
             System.out.println("ERRO.... : " + tPaciente2a);
 
         // Criar um medico
-        Medico tMedicoA = new Medico(0, "Estroncio Vago", 3432, "Urologista");
+        Medico tMedicoA = new Medico(0, "estroncio@gmail.com", "pororoca", "Estroncio Vago", 3432, "Urologista");
 
         // Criando o objeto de persistência
         MedicoDao tMedicoDao = new MedicoDao();
@@ -77,7 +77,7 @@ public class TestePacienteController
         PacienteController tController = new PacienteController();
 
         // Criar um paciente
-        Paciente tPacienteB = new Paciente(0, "Restronco Geudulto", LocalDate.of(1998, 6, 4), 3677676, "restro@gmail.com", 11111111111L);
+        Paciente tPacienteB = new Paciente(0, "restro@outlook.com", "arapuca", "Restronco Geudulto", LocalDate.of(1998, 6, 4), 3677676, 11111111111L);
 
         // Criar o paciente
         System.out.println();
@@ -193,7 +193,7 @@ public class TestePacienteController
             System.out.println("ERRO.... : " + tDto.getMensagem());
         }
 
-        Paciente tPacienteC = new Paciente(99999, "nono nono", LocalDate.now(), 1, "nono@gmail", 1L);
+        Paciente tPacienteC = new Paciente(99999, "semconta@gmail.com", "semsenha", "nono nono", LocalDate.now(), 1, 1L);
 
         System.out.println();
         System.out.println("Atualizando um paciente que não existe");
@@ -272,14 +272,14 @@ public class TestePacienteController
 
         System.out.println();
         System.out.println("Removendo o paciente");
-        if (tDao.delete(tPaciente2a.getId()))
+        if (tPacienteDao.delete(tPaciente2a.getId()))
             System.out.println("OK...... : " + tPaciente2a);
         else
             System.out.println("ERRO.... : " + tPaciente2a);
 
         // Remover o medico
         System.out.println();
-        System.out.println("Removendo o medico");
+        System.out.println("Removendo o médico");
         if (tMedicoDao.delete(tMedico2a.getId()))
             System.out.println("OK...... : " + tMedico2a);
         else

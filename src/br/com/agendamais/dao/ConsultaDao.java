@@ -47,6 +47,9 @@ public class ConsultaDao
     private String comandoCountByMedico   = "SELECT COUNT(ID_PACIENTE) "
                     + "FROM CONSULTA "
                     + "WHERE ID_MEDICO = ?";
+    private String comandoSearchByData   = "SELECT ID, DATA_CONSULTA, VALOR, ENDERECO, ID_PACIENTE, ID_MEDICO "
+                    + "FROM CONSULTA "
+                    + "WHERE TRUNC(DATA_CONSULTA) = ?";
 
     public Consulta create(Consulta pConsulta)
     {
@@ -291,7 +294,7 @@ public class ConsultaDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do consulta");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa das consultas");
         }
 
         // Retornando a lista de objetos
@@ -332,7 +335,7 @@ public class ConsultaDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do consulta");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa das consultas");
         }
 
         // Retornando a lista de objetos
@@ -369,7 +372,7 @@ public class ConsultaDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do consulta");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na contagem das consultas");
         }
 
         // Retornando a lista de objetos
@@ -410,7 +413,7 @@ public class ConsultaDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do consulta");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa das consultas");
         }
 
         // Retornando a lista de objetos
@@ -447,11 +450,52 @@ public class ConsultaDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do consulta");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na contagem das consultas");
         }
 
         // Retornando a lista de objetos
         return tQtde;
+    }
+
+    public List<Consulta> searchByData(Date pData)
+    {
+        List<Consulta> tLista = new ArrayList<>();
+
+        try
+        {
+            // Obter a conexão
+            Connection tConexao = Conexao.getConexao();
+
+            // Criar o comando
+            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoSearchByData);
+
+            // Preencher o comando
+            int i = 1;
+            tComandoJdbc.setDate(i++, new java.sql.Date(pData.getTime()));
+
+            // Executar o comando
+            ResultSet tResultSet = tComandoJdbc.executeQuery();
+
+            // Processar o resultado
+            while (tResultSet.next())
+            {
+                Consulta tConsulta = recuperarConsulta(tResultSet);
+
+                // Adicionar o o bjeto na lista
+                tLista.add(tConsulta);
+            }
+
+            // Liberar os recursos
+            tResultSet.close();
+            tComandoJdbc.close();
+        }
+        catch (SQLException tExcept)
+        {
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa das consultas");
+        }
+
+        // Retornando a lista de objetos
+        return tLista;
     }
 
     private Consulta recuperarConsulta(ResultSet tResultSet) throws SQLException
