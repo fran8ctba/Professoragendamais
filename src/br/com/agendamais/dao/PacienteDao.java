@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.agendamais.jdbc.Conexao;
@@ -103,15 +104,7 @@ public class PacienteDao
             if (tResultSet.next())
             {
                 // Criando o objeto
-                Paciente tPaciente = new Paciente();
-
-                // Recuperando os dados do resultSet
-                tPaciente.setId(tResultSet.getInt("ID"));
-                tPaciente.setNome(tResultSet.getString("NOME"));
-                tPaciente.setDataNascimento(tResultSet.getDate("DATA_NASCIMENTO").toLocalDate());
-                tPaciente.setTelefone(tResultSet.getLong("TELEFONE"));
-                tPaciente.setEmail(tResultSet.getString("EMAIL"));
-                tPaciente.setCpf(tResultSet.getLong("CPF"));
+                Paciente tPaciente = recuperarPaciente(tResultSet);
 
                 // Liberar os recursos
                 tResultSet.close();
@@ -212,6 +205,52 @@ public class PacienteDao
 
     public List<Paciente> search()
     {
-        return null;
+        List<Paciente> tLista = new ArrayList<>();
+
+        try
+        {
+            // Obter a conexão
+            Connection tConexao = Conexao.getConexao();
+
+            // Criar o comando
+            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoSearch);
+
+            // Executar o comando
+            ResultSet tResultSet = tComandoJdbc.executeQuery();
+
+            // Processar o resultado
+            while (tResultSet.next())
+            {
+                Paciente tPaciente = recuperarPaciente(tResultSet);
+
+                // Adicionar o o bjeto na lista
+                tLista.add(tPaciente);
+            }
+
+            // Liberar os recursos
+            tResultSet.close();
+            tComandoJdbc.close();
+        }
+        catch (SQLException tExcept)
+        {
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
+        }
+
+        // Retornando a lista de objetos
+        return tLista;
+    }
+
+    private Paciente recuperarPaciente(ResultSet tResultSet) throws SQLException
+    {
+        Paciente tPaciente = new Paciente();
+    
+        // Recuperando os dados do resultSet
+        tPaciente.setId(tResultSet.getInt("ID"));
+        tPaciente.setNome(tResultSet.getString("NOME"));
+        tPaciente.setDataNascimento(tResultSet.getDate("DATA_NASCIMENTO").toLocalDate());
+        tPaciente.setTelefone(tResultSet.getLong("TELEFONE"));
+        tPaciente.setEmail(tResultSet.getString("EMAIL"));
+        tPaciente.setCpf(tResultSet.getLong("CPF"));
+        return tPaciente;
     }
 }

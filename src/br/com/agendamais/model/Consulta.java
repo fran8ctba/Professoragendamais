@@ -1,6 +1,7 @@
 package br.com.agendamais.model;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Consulta
@@ -95,11 +96,13 @@ public class Consulta
     @Override
     public String toString()
     {
+        SimpleDateFormat tFormatador = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
         StringBuilder tBuilder = new StringBuilder();
         tBuilder.append("[");
         tBuilder.append(getId());
         tBuilder.append(", ");
-        tBuilder.append(getDataConsulta());
+        tBuilder.append(tFormatador.format(getDataConsulta()));
         tBuilder.append(", ");
         tBuilder.append(getValor());
         tBuilder.append(", ");
