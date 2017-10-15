@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,10 @@ public class PacienteDao
 
             // Preencher o comando
             int i = 1;
-            tComandoJdbc.setString(i++, pPaciente.getEmail());
+            if (pPaciente.getEmail() != null)
+                tComandoJdbc.setString(i++, pPaciente.getEmail());
+            else
+                tComandoJdbc.setNull(i++, Types.VARCHAR);
             tComandoJdbc.setString(i++, pPaciente.getSenha());
             tComandoJdbc.setString(i++, pPaciente.getNome());
             tComandoJdbc.setDate(i++, Date.valueOf(pPaciente.getDataNascimento()));
@@ -180,7 +184,10 @@ public class PacienteDao
 
             // Preencher o comando
             int i = 1;
-            tComandoJdbc.setString(i++, pPaciente.getEmail());
+            if (pPaciente.getEmail() != null)
+                tComandoJdbc.setString(i++, pPaciente.getEmail());
+            else
+                tComandoJdbc.setNull(i++, Types.VARCHAR);
             tComandoJdbc.setString(i++, pPaciente.getSenha());
             tComandoJdbc.setString(i++, pPaciente.getNome());
             tComandoJdbc.setDate(i++, Date.valueOf(pPaciente.getDataNascimento()));
@@ -292,7 +299,11 @@ public class PacienteDao
 
         // Recuperando os dados do resultSet
         tPaciente.setId(tResultSet.getInt("ID"));
-        tPaciente.setEmail(tResultSet.getString("EMAIL"));
+        String tSenha = tResultSet.getString("EMAIL");
+        if (tResultSet.wasNull())
+            tPaciente.setEmail(null);
+        else
+            tPaciente.setEmail(tSenha);
         tPaciente.setSenha(tResultSet.getString("SENHA"));
         tPaciente.setNome(tResultSet.getString("NOME"));
         tPaciente.setDataNascimento(tResultSet.getDate("DATA_NASCIMENTO").toLocalDate());

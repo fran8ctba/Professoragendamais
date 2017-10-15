@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"> 
+
+	<h:head>
+	</h:head>
+	<body> 
+		<h2>Exclusão de Pacientes</h2>
+		<h:form id="inclusaoPaciente">
+			<h:panelGrid columns="2">
+				<h:outputText value="Identificador : "/> 
+				<h:panelGroup>
+					<h:inputText id="id"  required="true" disabled="#{PacienteVB.edicao}" value="#{PacienteVB.id}" size="20" label="Identificador" />
+	    			&nbsp;
+				    <h:commandButton disabled="#{PacienteVB.edicao}" value="Pesquisar" action="#{PacienteVB.consultar}"/>
+				</h:panelGroup>
+				<h:outputText value="E-mail :" disabled="true"/> 
+				<h:inputText id="email" disabled="true" value="#{PacienteVB.email}" size="50" label="Email" />
+				<h:outputText value="Senha : " disabled="true"/> 
+				<h:inputSecret disabled="true"  id="senha" redisplay="true" value="#{PacienteVB.senha}" size="10" required="true" label="Senha" />
+				<h:outputText value="Nome :" disabled="true"/> 
+				<h:inputText id="nome" disabled="true" value="#{PacienteVB.nome}" size="50" required="true" label="Nome" />
+				<h:outputText value="Data de Nascimento :" disabled="true"/> 
+				<h:inputText id="dataNascimento" disabled="true" value="#{PacienteVB.dataNascimento}" size="10" required="true" label="Data de Nascimento" >
+					<f:convertDateTime pattern="d/M/yyyy" />
+				</h:inputText>
+				<h:outputText value="Telefone :" disabled="true"/> 
+				<h:inputText id="telefone" disabled="true" value="#{PacienteVB.telefone}" size="15" required="true" label="Telefone" />
+				<h:outputText value="CPF :" disabled="true"/> 
+				<h:inputText id="cpf" disabled="true" value="#{PacienteVB.cpf}" size="11" required="true" label="CPF" />
+			</h:panelGrid>
+			<h:messages errorStyle="color:red;margin:8px;" infoStyle="color:blue;margin:8px;" layout="table"/>
+			<h:commandButton value="Excluir" disabled="#{!PacienteVB.edicao}" action="#{PacienteVB.excluir}" ajax="false"/>
+			&nbsp;
+			<h:commandButton value="Limpar" action="#{PacienteVB.limpar}" immediate="true">
+				<f:setPropertyActionListener target="#{PacienteVB.tela}" value="excluir" />
+			</h:commandButton>
+			&nbsp;
+			<h:commandButton value="Home" action="/index" immediate="true"/>
+		</h:form>
+	</body> 
+</html>

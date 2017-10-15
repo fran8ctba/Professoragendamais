@@ -1,44 +1,42 @@
 package br.com.agendamais.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.agendamais.jdbc.Conexao;
-import br.com.agendamais.model.Medico;
+import br.com.agendamais.model.Paciente;
 import br.com.agendamais.util.ExceptionUtil;
 
-public class MedicoDao
+public class PacienteDao
 {
-    private String comandoCreate   = "INSERT INTO MEDICO "
-                    + "(ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE)"
-                    + "VALUES (MEDICO_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
-    private String comandoRecovery = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
-                    + "FROM MEDICO "
+    private String comandoCreate   = "INSERT INTO PACIENTE "
+                    + "(ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF)"
+                    + "VALUES (PACIENTE_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+    private String comandoRecovery = "SELECT ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF "
+                    + "FROM PACIENTE "
                     + "WHERE ID = ?";
-    private String comandoRecoveryByCrm = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
-                    + "FROM MEDICO "
-                    + "WHERE CRM = ?";
-    private String comandoUpdate   = "UPDATE MEDICO "
+    private String comandoRecoveryByCpf = "SELECT ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF "
+                    + "FROM PACIENTE "
+                    + "WHERE CPF = ?";
+    private String comandoUpdate   = "UPDATE PACIENTE "
                     + "SET EMAIL = ?, "
                     + "SENHA = ?, "
                     + "NOME = ?, "
-                    + "CRM = ?, "
-                    + "ESPECIALIDADE = ? "
+                    + "DATA_NASCIMENTO = ?, "
+                    + "TELEFONE = ?, "
+                    + "CPF = ? "
                     + "WHERE ID = ?";
-    private String comandoDelete   = "DELETE FROM MEDICO "
+    private String comandoDelete   = "DELETE FROM PACIENTE "
                     + "WHERE ID = ?";
-    private String comandoSearch   = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
-                    + "FROM MEDICO";
-    private String comandoSearchByEspecialidade   = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
-                    + "FROM MEDICO "
-                    + "WHERE UPPER(ESPECIALIDADE) LIKE UPPER(?)";
+    private String comandoSearch   = "SELECT ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF "
+                    + "FROM PACIENTE";
 
-    public Medico create(Medico pMedico)
+    public Paciente create(Paciente pPaciente)
     {
         try
         {
@@ -50,11 +48,12 @@ public class MedicoDao
 
             // Preencher o comando
             int i = 1;
-            tComandoJdbc.setString(i++, pMedico.getEmail());
-            tComandoJdbc.setString(i++, pMedico.getSenha());
-            tComandoJdbc.setString(i++, pMedico.getNome());
-            tComandoJdbc.setInt(i++, pMedico.getCrm());
-            tComandoJdbc.setString(i++, pMedico.getEspecialidade());
+            tComandoJdbc.setString(i++, pPaciente.getEmail());
+            tComandoJdbc.setString(i++, pPaciente.getSenha());
+            tComandoJdbc.setString(i++, pPaciente.getNome());
+            tComandoJdbc.setDate(i++, Date.valueOf(pPaciente.getDataNascimento()));
+            tComandoJdbc.setLong(i++, pPaciente.getTelefone());
+            tComandoJdbc.setLong(i++, pPaciente.getCpf());
 
             // Executar o comando
             int tQtd = tComandoJdbc.executeUpdate();
@@ -63,33 +62,33 @@ public class MedicoDao
             if (tQtd == 1)
             {
                 // Copiando o parametro
-                Medico tMedico = pMedico;
+                Paciente tPaciente = pPaciente;
 
                 // Recuperando o código gerado pelo banco de dados
                 ResultSet tRsChave = tComandoJdbc.getGeneratedKeys();
                 tRsChave.next();
 
                 // Assinalar a chave primária gerada no objeto
-                pMedico.setId(tRsChave.getInt(1));
+                pPaciente.setId(tRsChave.getInt(1));
 
                 // Liberar os recursos
                 tRsChave.close();
                 tComandoJdbc.close();
 
                 // Retornando o objeto inserido
-                return tMedico;
+                return tPaciente;
             }
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do medico");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
         }
 
         // Retorna null indicando algum erro de processamento
         return null;
     }
 
-    public Medico recovery(int pId)
+    public Paciente recovery(int pId)
     {
         try
         {
@@ -110,26 +109,26 @@ public class MedicoDao
             if (tResultSet.next())
             {
                 // Criando o objeto
-                Medico tMedico = recuperarMedico(tResultSet);
+                Paciente tPaciente = recuperarPaciente(tResultSet);
 
                 // Liberar os recursos
                 tResultSet.close();
                 tComandoJdbc.close();
 
                 // Retornando o objeto inserido
-                return tMedico;
+                return tPaciente;
             }
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do medico");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
         }
 
         // Retorna null indicando algum erro de processamento
         return null;
     }
 
-    public Medico recoveryByCrm(int pCrm)
+    public Paciente recoveryByCpf(long pCpf)
     {
         try
         {
@@ -137,11 +136,11 @@ public class MedicoDao
             Connection tConexao = Conexao.getConexao();
 
             // Criar o comando
-            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoRecoveryByCrm);
+            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoRecoveryByCpf);
 
             // Preencher o comando
             int i = 1;
-            tComandoJdbc.setInt(i++, pCrm);
+            tComandoJdbc.setLong(i++, pCpf);
 
             // Executar o comando
             ResultSet tResultSet = tComandoJdbc.executeQuery();
@@ -150,26 +149,26 @@ public class MedicoDao
             if (tResultSet.next())
             {
                 // Criando o objeto
-                Medico tMedico = recuperarMedico(tResultSet);
+                Paciente tPaciente = recuperarPaciente(tResultSet);
 
                 // Liberar os recursos
                 tResultSet.close();
                 tComandoJdbc.close();
 
                 // Retornando o objeto inserido
-                return tMedico;
+                return tPaciente;
             }
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do medico");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
         }
 
         // Retorna null indicando algum erro de processamento
         return null;
     }
 
-    public Medico update(Medico pMedico)
+    public Paciente update(Paciente pPaciente)
     {
         try
         {
@@ -181,15 +180,13 @@ public class MedicoDao
 
             // Preencher o comando
             int i = 1;
-            if (pMedico.getEmail() != null)
-                tComandoJdbc.setString(i++, pMedico.getEmail());
-            else
-                tComandoJdbc.setNull(i++, Types.VARCHAR);
-            tComandoJdbc.setString(i++, pMedico.getSenha());
-            tComandoJdbc.setString(i++, pMedico.getNome());
-            tComandoJdbc.setInt(i++, pMedico.getCrm());
-            tComandoJdbc.setString(i++, pMedico.getEspecialidade());
-            tComandoJdbc.setInt(i++, pMedico.getId());
+            tComandoJdbc.setString(i++, pPaciente.getEmail());
+            tComandoJdbc.setString(i++, pPaciente.getSenha());
+            tComandoJdbc.setString(i++, pPaciente.getNome());
+            tComandoJdbc.setDate(i++, Date.valueOf(pPaciente.getDataNascimento()));
+            tComandoJdbc.setLong(i++, pPaciente.getTelefone());
+            tComandoJdbc.setLong(i++, pPaciente.getCpf());
+            tComandoJdbc.setInt(i++, pPaciente.getId());
 
             // Executar o comando
             int tQtd = tComandoJdbc.executeUpdate();
@@ -198,18 +195,18 @@ public class MedicoDao
             if (tQtd == 1)
             {
                 // Copiando o parametro
-                Medico tMedico = pMedico;
+                Paciente tPaciente = pPaciente;
 
                 // Liberar os recursos
                 tComandoJdbc.close();
 
                 // Retornando o objeto inserido
-                return tMedico;
+                return tPaciente;
             }
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do medico");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
         }
 
         // Retorna null indicando algum erro de processamento
@@ -245,16 +242,16 @@ public class MedicoDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na remoção do medico");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na remoção do paciente");
         }
 
         // Retorna falso indicando algum erro de processamento
         return false;
     }
 
-    public List<Medico> search()
+    public List<Paciente> search()
     {
-        List<Medico> tLista = new ArrayList<>();
+        List<Paciente> tLista = new ArrayList<>();
 
         try
         {
@@ -270,10 +267,10 @@ public class MedicoDao
             // Processar o resultado
             while (tResultSet.next())
             {
-                Medico tMedico = recuperarMedico(tResultSet);
+                Paciente tPaciente = recuperarPaciente(tResultSet);
 
                 // Adicionar o o bjeto na lista
-                tLista.add(tMedico);
+                tLista.add(tPaciente);
             }
 
             // Liberar os recursos
@@ -282,72 +279,25 @@ public class MedicoDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa dos médicos");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa dos pacientes");
         }
 
         // Retornando a lista de objetos
         return tLista;
     }
 
-    public List<Medico> searchByEspecialidade(String pEspecialidade)
+    private Paciente recuperarPaciente(ResultSet tResultSet) throws SQLException
     {
-        // Acertando o critério de pesquisa
-        String tEspecialidade = "%" + pEspecialidade + "%";
-
-        List<Medico> tLista = new ArrayList<>();
-
-        try
-        {
-            // Obter a conexão
-            Connection tConexao = Conexao.getConexao();
-
-            // Criar o comando
-            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoSearchByEspecialidade);
-
-            // Preencher o comando
-            int i = 1;
-            tComandoJdbc.setString(i++, tEspecialidade);
-
-            // Executar o comando
-            ResultSet tResultSet = tComandoJdbc.executeQuery();
-
-            // Processar o resultado
-            while (tResultSet.next())
-            {
-                Medico tMedico = recuperarMedico(tResultSet);
-
-                // Adicionar o o bjeto na lista
-                tLista.add(tMedico);
-            }
-
-            // Liberar os recursos
-            tResultSet.close();
-            tComandoJdbc.close();
-        }
-        catch (SQLException tExcept)
-        {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa dos médicos por especialidade");
-        }
-
-        // Retornando a lista de objetos
-        return tLista;
-    }
-
-    private Medico recuperarMedico(ResultSet tResultSet) throws SQLException
-    {
-        Medico tMedico = new Medico();
+        Paciente tPaciente = new Paciente();
 
         // Recuperando os dados do resultSet
-        tMedico.setId(tResultSet.getInt("ID"));
-        String tSenha = tResultSet.getString("EMAIL");
-        if (tResultSet.wasNull())
-            tMedico.setEmail(null);
-        else
-            tMedico.setEmail(tSenha);
-        tMedico.setSenha(tResultSet.getString("SENHA"));
-        tMedico.setNome(tResultSet.getString("NOME"));
-        tMedico.setCrm(tResultSet.getInt("CRM"));
-        tMedico.setEspecialidade(tResultSet.getString("ESPECIALIDADE"));
-        return tMedico;
+        tPaciente.setId(tResultSet.getInt("ID"));
+        tPaciente.setEmail(tResultSet.getString("EMAIL"));
+        tPaciente.setSenha(tResultSet.getString("SENHA"));
+        tPaciente.setNome(tResultSet.getString("NOME"));
+        tPaciente.setDataNascimento(tResultSet.getDate("DATA_NASCIMENTO").toLocalDate());
+        tPaciente.setTelefone(tResultSet.getLong("TELEFONE"));
+        tPaciente.setCpf(tResultSet.getLong("CPF"));
+        return tPaciente;
     }
 }

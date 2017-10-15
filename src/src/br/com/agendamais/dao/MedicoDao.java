@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,10 +180,7 @@ public class MedicoDao
 
             // Preencher o comando
             int i = 1;
-            if (pMedico.getEmail() != null)
-                tComandoJdbc.setString(i++, pMedico.getEmail());
-            else
-                tComandoJdbc.setNull(i++, Types.VARCHAR);
+            tComandoJdbc.setString(i++, pMedico.getEmail());
             tComandoJdbc.setString(i++, pMedico.getSenha());
             tComandoJdbc.setString(i++, pMedico.getNome());
             tComandoJdbc.setInt(i++, pMedico.getCrm());
@@ -339,11 +335,7 @@ public class MedicoDao
 
         // Recuperando os dados do resultSet
         tMedico.setId(tResultSet.getInt("ID"));
-        String tSenha = tResultSet.getString("EMAIL");
-        if (tResultSet.wasNull())
-            tMedico.setEmail(null);
-        else
-            tMedico.setEmail(tSenha);
+        tMedico.setEmail(tResultSet.getString("EMAIL"));
         tMedico.setSenha(tResultSet.getString("SENHA"));
         tMedico.setNome(tResultSet.getString("NOME"));
         tMedico.setCrm(tResultSet.getInt("CRM"));

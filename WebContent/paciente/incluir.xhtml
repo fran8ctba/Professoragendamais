@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"> 
+
+	<h:head>
+	</h:head>
+	<body> 
+		<h2>Inclusão de Pacientes</h2><br/>
+		<h:form id="inclusaoPaciente">
+			<h:panelGrid columns="2">
+				Identificador : 
+				<h:inputText id="id" value="#{PacienteVB.id}" size="20" disabled="true" label="Identificador" />
+				E-mail : 
+				<h:inputText id="email" value="#{PacienteVB.email}" size="50" label="Email" />
+				Senha : 
+				<h:inputSecret id="senha" redisplay="true" value="#{PacienteVB.senha}" size="10" required="true" label="Senha" />
+				Nome : 
+				<h:inputText id="nome" value="#{PacienteVB.nome}" size="50" required="true" label="Nome" />
+				Data de Nascimento : 
+				<h:inputText id="dataNascimento" value="#{PacienteVB.dataNascimento}" size="10" required="true" label="Data de Nascimento" >
+					<f:convertDateTime pattern="d/M/yyyy" />
+				</h:inputText>
+				Telefone : 
+				<h:inputText id="telefone" value="#{PacienteVB.telefone}" size="15" required="true" label="Telefone" />
+				CPF : 
+				<h:inputText id="cpf" value="#{PacienteVB.cpf}" size="11" required="true" label="CPF" />
+			</h:panelGrid>
+			<h:messages errorStyle="color:red;margin:8px;" infoStyle="color:blue;margin:8px;" layout="table"/>
+			<h:commandButton value="Cadastrar" action="#{PacienteVB.cadastrar}"
+                                   ajax="false"/>
+			&nbsp;
+			<h:commandButton value="Limpar" action="#{PacienteVB.limpar}" immediate="true">
+				<f:setPropertyActionListener target="#{PacienteVB.tela}" value="incluir" />
+			</h:commandButton>
+			&nbsp;
+			<h:commandButton value="Home" action="/index" immediate="true"/>
+		</h:form>
+	</body> 
+</html>

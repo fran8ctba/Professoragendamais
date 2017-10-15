@@ -39,7 +39,7 @@ public class PacienteController
     public PacienteDto recuperarPaciente(int pId)
     {
         // Verificar as informações
-        if (pId <= 0)
+        if (pId <=0)
         {
             return new PacienteDto(false, "Identificador do paciente inválido");
         }
@@ -69,21 +69,11 @@ public class PacienteController
         // Criando o objeto de persistência
         PacienteDao tDao = new PacienteDao();
 
-        // Recuperando o paciente
-        Paciente tPaciente = tDao.recovery(pPaciente.getId());
-        if (tPaciente == null)
+        // Verificando se existe um paciente com o novo CPF
+        Paciente tPaciente = tDao.recoveryByCpf(pPaciente.getCpf());
+        if (tPaciente != null)
         {
-            return new PacienteDto(false, "Não existe paciente com o identificador informado");
-        }
-
-        if (pPaciente.getCpf() != tPaciente.getCpf())
-        {
-            // Verificando se existe um paciente com o novo CPF
-            tPaciente = tDao.recoveryByCpf(pPaciente.getCpf());
-            if (tPaciente != null)
-            {
-                return new PacienteDto(false, "Já existe paciente com o cpf informado");
-            }
+            return new PacienteDto(false, "Já existe paciente com o cpf informado");
         }
 
         // Atualizando o paciente
@@ -100,7 +90,7 @@ public class PacienteController
     public PacienteDto removePaciente(int pId)
     {
         // Verificar as informações
-        if (pId <= 0)
+        if (pId <=0)
         {
             return new PacienteDto(false, "Identificador do paciente inválido");
         }
