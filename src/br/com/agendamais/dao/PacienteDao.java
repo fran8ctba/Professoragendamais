@@ -20,6 +20,9 @@ public class PacienteDao
     private String comandoRecovery = "SELECT ID, NOME, DATA_NASCIMENTO, TELEFONE, EMAIL, CPF "
                     + "FROM PACIENTE "
                     + "WHERE ID = ?";
+    private String comandoRecoveryByCpf = "SELECT ID, NOME, DATA_NASCIMENTO, TELEFONE, EMAIL, CPF "
+                    + "FROM PACIENTE "
+                    + "WHERE CPF = ?";
     private String comandoUpdate   = "UPDATE PACIENTE "
                     + "SET NOME = ?, "
                     + "DATA_NASCIMENTO = ?, "
@@ -96,6 +99,46 @@ public class PacienteDao
             // Preencher o comando
             int i = 1;
             tComandoJdbc.setInt(i++, pId);
+
+            // Executar o comando
+            ResultSet tResultSet = tComandoJdbc.executeQuery();
+
+            // Processar o resultado
+            if (tResultSet.next())
+            {
+                // Criando o objeto
+                Paciente tPaciente = recuperarPaciente(tResultSet);
+
+                // Liberar os recursos
+                tResultSet.close();
+                tComandoJdbc.close();
+
+                // Retornando o objeto inserido
+                return tPaciente;
+            }
+        }
+        catch (SQLException tExcept)
+        {
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
+        }
+
+        // Retorna null indicando algum erro de processamento
+        return null;
+    }
+
+    public Paciente recoveryByCpf(long pCpf)
+    {
+        try
+        {
+            // Obter a conexão
+            Connection tConexao = Conexao.getConexao();
+
+            // Criar o comando
+            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoRecoveryByCpf);
+
+            // Preencher o comando
+            int i = 1;
+            tComandoJdbc.setLong(i++, pCpf);
 
             // Executar o comando
             ResultSet tResultSet = tComandoJdbc.executeQuery();
@@ -243,7 +286,7 @@ public class PacienteDao
     private Paciente recuperarPaciente(ResultSet tResultSet) throws SQLException
     {
         Paciente tPaciente = new Paciente();
-    
+
         // Recuperando os dados do resultSet
         tPaciente.setId(tResultSet.getInt("ID"));
         tPaciente.setNome(tResultSet.getString("NOME"));
