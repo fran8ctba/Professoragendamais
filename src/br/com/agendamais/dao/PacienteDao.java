@@ -15,24 +15,25 @@ import br.com.agendamais.util.ExceptionUtil;
 public class PacienteDao
 {
     private String comandoCreate   = "INSERT INTO PACIENTE "
-                    + "(ID, NOME, DATA_NASCIMENTO, TELEFONE, EMAIL, CPF)"
-                    + "VALUES (PACIENTE_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
-    private String comandoRecovery = "SELECT ID, NOME, DATA_NASCIMENTO, TELEFONE, EMAIL, CPF "
+                    + "(ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF)"
+                    + "VALUES (PACIENTE_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+    private String comandoRecovery = "SELECT ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF "
                     + "FROM PACIENTE "
                     + "WHERE ID = ?";
-    private String comandoRecoveryByCpf = "SELECT ID, NOME, DATA_NASCIMENTO, TELEFONE, EMAIL, CPF "
+    private String comandoRecoveryByCpf = "SELECT ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF "
                     + "FROM PACIENTE "
                     + "WHERE CPF = ?";
     private String comandoUpdate   = "UPDATE PACIENTE "
-                    + "SET NOME = ?, "
+                    + "SET EMAIL = ?, "
+                    + "SENHA = ?, "
+                    + "NOME = ?, "
                     + "DATA_NASCIMENTO = ?, "
                     + "TELEFONE = ?, "
-                    + "EMAIL = ?, "
                     + "CPF = ? "
                     + "WHERE ID = ?";
     private String comandoDelete   = "DELETE FROM PACIENTE "
                     + "WHERE ID = ?";
-    private String comandoSearch   = "SELECT ID, NOME, DATA_NASCIMENTO, TELEFONE, EMAIL, CPF "
+    private String comandoSearch   = "SELECT ID, EMAIL, SENHA, NOME, DATA_NASCIMENTO, TELEFONE, CPF "
                     + "FROM PACIENTE";
 
     public Paciente create(Paciente pPaciente)
@@ -47,10 +48,11 @@ public class PacienteDao
 
             // Preencher o comando
             int i = 1;
+            tComandoJdbc.setString(i++, pPaciente.getEmail());
+            tComandoJdbc.setString(i++, pPaciente.getSenha());
             tComandoJdbc.setString(i++, pPaciente.getNome());
             tComandoJdbc.setDate(i++, Date.valueOf(pPaciente.getDataNascimento()));
             tComandoJdbc.setLong(i++, pPaciente.getTelefone());
-            tComandoJdbc.setString(i++, pPaciente.getEmail());
             tComandoJdbc.setLong(i++, pPaciente.getCpf());
 
             // Executar o comando
@@ -178,10 +180,11 @@ public class PacienteDao
 
             // Preencher o comando
             int i = 1;
+            tComandoJdbc.setString(i++, pPaciente.getEmail());
+            tComandoJdbc.setString(i++, pPaciente.getSenha());
             tComandoJdbc.setString(i++, pPaciente.getNome());
             tComandoJdbc.setDate(i++, Date.valueOf(pPaciente.getDataNascimento()));
             tComandoJdbc.setLong(i++, pPaciente.getTelefone());
-            tComandoJdbc.setString(i++, pPaciente.getEmail());
             tComandoJdbc.setLong(i++, pPaciente.getCpf());
             tComandoJdbc.setInt(i++, pPaciente.getId());
 
@@ -289,10 +292,11 @@ public class PacienteDao
 
         // Recuperando os dados do resultSet
         tPaciente.setId(tResultSet.getInt("ID"));
+        tPaciente.setEmail(tResultSet.getString("EMAIL"));
+        tPaciente.setSenha(tResultSet.getString("SENHA"));
         tPaciente.setNome(tResultSet.getString("NOME"));
         tPaciente.setDataNascimento(tResultSet.getDate("DATA_NASCIMENTO").toLocalDate());
         tPaciente.setTelefone(tResultSet.getLong("TELEFONE"));
-        tPaciente.setEmail(tResultSet.getString("EMAIL"));
         tPaciente.setCpf(tResultSet.getLong("CPF"));
         return tPaciente;
     }

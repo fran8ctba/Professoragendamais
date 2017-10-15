@@ -11,8 +11,8 @@ public class TestePacienteDao
     public static void main(String[] pArgs)
     {
         // Criar um paciente
-        Paciente tPacienteA = new Paciente(0, "Yerlandia Westrocia", LocalDate.of(1978, 8, 29), 3456767, "yerla@gmail.com", 37834534452L);
-        Paciente tPacienteB = new Paciente(0, "Restronco Geudulto", LocalDate.of(1998, 6, 4), 3677676, "restro@gmail.com", 11111111111L);
+        Paciente tPacienteA = new Paciente(0, "landia@hotmail.com", "jurubeba", "Yerlandia Westrocia", LocalDate.of(1978, 8, 29), 3456767,  37834534452L);
+        Paciente tPacienteB = new Paciente(0, "restro@outlook.com", "arapuca", "Restronco Geudulto", LocalDate.of(1998, 6, 4), 3677676, 11111111111L);
 
         // Criando o objeto de persistência
         PacienteDao tDao = new PacienteDao();

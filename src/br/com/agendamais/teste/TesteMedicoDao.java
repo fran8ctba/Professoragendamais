@@ -10,8 +10,8 @@ public class TesteMedicoDao
     public static void main(String[] pArgs)
     {
         // Criar um medico
-        Medico tMedicoA = new Medico(0, "Estroncio Vago", 3432, "Urologista");
-        Medico tMedicoB = new Medico(0, "Favilda Freldinca", 222, "Pediatra");
+        Medico tMedicoA = new Medico(0, "estroncio@gmail.com", "pororoca", "Estroncio Vago", 3432, "Urologista");
+        Medico tMedicoB = new Medico(0, "favo@gmail.com", "cafune","Favilda Freldinca", 222, "Pediatra");
 
         // Criando o objeto de persistência
         MedicoDao tDao = new MedicoDao();

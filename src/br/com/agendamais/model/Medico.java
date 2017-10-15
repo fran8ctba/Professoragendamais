@@ -1,10 +1,8 @@
 package br.com.agendamais.model;
 
-public class Medico
+public class Medico extends Usuario
 {
     // Atributos
-    private int    id;
-    private String nome;
     private int    crm;
     private String especialidade;
 
@@ -14,36 +12,14 @@ public class Medico
         super();
     }
 
-    public Medico(int pId, String pNome, int pCrm, String pEspecialidade)
+    public Medico(int pId, String pEmail, String pSenha, String pNome, int pCrm, String pEspecialidade)
     {
-        super();
-        setId(pId);
-        setNome(pNome);
+        super(pId, pEmail, pSenha, pNome);
         setCrm(pCrm);
         setEspecialidade(pEspecialidade);
     }
 
     // Métodos de acesso
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId(int pId)
-    {
-        id = pId;
-    }
-
-    public String getNome()
-    {
-        return nome;
-    }
-
-    public void setNome(String pNome)
-    {
-        nome = pNome;
-    }
-
     public int getCrm()
     {
         return crm;
@@ -70,9 +46,7 @@ public class Medico
     {
         StringBuilder tBuilder = new StringBuilder();
         tBuilder.append("[");
-        tBuilder.append(getId());
-        tBuilder.append(", ");
-        tBuilder.append(getNome());
+        tBuilder.append(super.toString());
         tBuilder.append(", ");
         tBuilder.append(getCrm());
         tBuilder.append(", ");

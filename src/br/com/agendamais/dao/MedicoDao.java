@@ -14,24 +14,26 @@ import br.com.agendamais.util.ExceptionUtil;
 public class MedicoDao
 {
     private String comandoCreate   = "INSERT INTO MEDICO "
-                    + "(ID, NOME, CRM, ESPECIALIDADE)"
-                    + "VALUES (MEDICO_SEQ.NEXTVAL, ?, ?, ?)";
-    private String comandoRecovery = "SELECT ID, NOME, CRM, ESPECIALIDADE "
+                    + "(ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE)"
+                    + "VALUES (MEDICO_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+    private String comandoRecovery = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
                     + "FROM MEDICO "
                     + "WHERE ID = ?";
-    private String comandoRecoveryByCrm = "SELECT ID, NOME, CRM, ESPECIALIDADE "
+    private String comandoRecoveryByCrm = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
                     + "FROM MEDICO "
                     + "WHERE CRM = ?";
     private String comandoUpdate   = "UPDATE MEDICO "
-                    + "SET NOME = ?, "
+                    + "SET EMAIL = ?, "
+                    + "SENHA = ?, "
+                    + "NOME = ?, "
                     + "CRM = ?, "
                     + "ESPECIALIDADE = ? "
                     + "WHERE ID = ?";
     private String comandoDelete   = "DELETE FROM MEDICO "
                     + "WHERE ID = ?";
-    private String comandoSearch   = "SELECT ID, NOME, CRM, ESPECIALIDADE "
+    private String comandoSearch   = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
                     + "FROM MEDICO";
-    private String comandoSearchByEspecialidade   = "SELECT ID, NOME, CRM, ESPECIALIDADE "
+    private String comandoSearchByEspecialidade   = "SELECT ID, EMAIL, SENHA, NOME, CRM, ESPECIALIDADE "
                     + "FROM MEDICO "
                     + "WHERE UPPER(ESPECIALIDADE) LIKE UPPER(?)";
 
@@ -47,6 +49,8 @@ public class MedicoDao
 
             // Preencher o comando
             int i = 1;
+            tComandoJdbc.setString(i++, pMedico.getEmail());
+            tComandoJdbc.setString(i++, pMedico.getSenha());
             tComandoJdbc.setString(i++, pMedico.getNome());
             tComandoJdbc.setInt(i++, pMedico.getCrm());
             tComandoJdbc.setString(i++, pMedico.getEspecialidade());
@@ -176,6 +180,8 @@ public class MedicoDao
 
             // Preencher o comando
             int i = 1;
+            tComandoJdbc.setString(i++, pMedico.getEmail());
+            tComandoJdbc.setString(i++, pMedico.getSenha());
             tComandoJdbc.setString(i++, pMedico.getNome());
             tComandoJdbc.setInt(i++, pMedico.getCrm());
             tComandoJdbc.setString(i++, pMedico.getEspecialidade());
@@ -329,6 +335,8 @@ public class MedicoDao
 
         // Recuperando os dados do resultSet
         tMedico.setId(tResultSet.getInt("ID"));
+        tMedico.setEmail(tResultSet.getString("EMAIL"));
+        tMedico.setSenha(tResultSet.getString("SENHA"));
         tMedico.setNome(tResultSet.getString("NOME"));
         tMedico.setCrm(tResultSet.getInt("CRM"));
         tMedico.setEspecialidade(tResultSet.getString("ESPECIALIDADE"));
