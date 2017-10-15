@@ -145,7 +145,7 @@ public class TesteConsultaDao
         else
             System.out.println("ERRO.... : " + tConsulta5b);
 
-        // Listar os consultas
+        // Listar as consultas
         List<Consulta> tLista = tDao.search();
         System.out.println();
         System.out.println("Pesquisando");
@@ -153,6 +153,21 @@ public class TesteConsultaDao
         {
             System.out.println("OK...... : " + tConsulta);
         }
+
+        // Listar as consultas
+        tLista = tDao.searchByIdPaciente(tPaciente2a.getId());
+        System.out.println();
+        System.out.println("Pesquisando por paciente");
+        for (Consulta tConsulta : tLista)
+        {
+            System.out.println("OK...... : " + tConsulta);
+        }
+
+        // Contar as consultas
+        int tQtde = tDao.countByPaciente(tPaciente2a.getId());
+        System.out.println();
+        System.out.println("Contando consultas por paciente");
+        System.out.println("OK...... : " + tQtde);
 
         // Remover a consulta
         System.out.println();

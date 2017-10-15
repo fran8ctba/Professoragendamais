@@ -2,36 +2,36 @@ package br.com.agendamais.dto;
 
 import java.util.List;
 
-import br.com.agendamais.model.Paciente;
+import br.com.agendamais.model.Medico;
 
-public class PacienteDto
+public class MedicoDto
 {
     private boolean        ok;
     private String         mensagem;
-    private Paciente       paciente;
-    private List<Paciente> lista;
+    private Medico       medico;
+    private List<Medico> lista;
 
-    public PacienteDto()
+    public MedicoDto()
     {
 
     }
 
-    public PacienteDto(boolean pOk, String pMensagem)
-    {
-        super();
-        ok = pOk;
-        mensagem = pMensagem;
-    }
-
-    public PacienteDto(boolean pOk, String pMensagem, Paciente pPaciente)
+    public MedicoDto(boolean pOk, String pMensagem)
     {
         super();
         ok = pOk;
         mensagem = pMensagem;
-        paciente = pPaciente;
     }
 
-    public PacienteDto(boolean pOk, String pMensagem, List<Paciente> pLista)
+    public MedicoDto(boolean pOk, String pMensagem, Medico pMedico)
+    {
+        super();
+        ok = pOk;
+        mensagem = pMensagem;
+        medico = pMedico;
+    }
+
+    public MedicoDto(boolean pOk, String pMensagem, List<Medico> pLista)
     {
         super();
         ok = pOk;
@@ -59,22 +59,22 @@ public class PacienteDto
         mensagem = pMensagem;
     }
 
-    public Paciente getPaciente()
+    public Medico getMedico()
     {
-        return paciente;
+        return medico;
     }
 
-    public void setPaciente(Paciente pPaciente)
+    public void setMedico(Medico pMedico)
     {
-        paciente = pPaciente;
+        medico = pMedico;
     }
 
-    public List<Paciente> getLista()
+    public List<Medico> getLista()
     {
         return lista;
     }
 
-    public void setLista(List<Paciente> pLista)
+    public void setLista(List<Medico> pLista)
     {
         lista = pLista;
     }

@@ -19,6 +19,9 @@ public class MedicoDao
     private String comandoRecovery = "SELECT ID, NOME, CRM, ESPECIALIDADE "
                     + "FROM MEDICO "
                     + "WHERE ID = ?";
+    private String comandoRecoveryByCrm = "SELECT ID, NOME, CRM, ESPECIALIDADE "
+                    + "FROM MEDICO "
+                    + "WHERE CRM = ?";
     private String comandoUpdate   = "UPDATE MEDICO "
                     + "SET NOME = ?, "
                     + "CRM = ?, "
@@ -28,6 +31,9 @@ public class MedicoDao
                     + "WHERE ID = ?";
     private String comandoSearch   = "SELECT ID, NOME, CRM, ESPECIALIDADE "
                     + "FROM MEDICO";
+    private String comandoSearchByEspecialidade   = "SELECT ID, NOME, CRM, ESPECIALIDADE "
+                    + "FROM MEDICO "
+                    + "WHERE UPPER(ESPECIALIDADE) LIKE UPPER(?)";
 
     public Medico create(Medico pMedico)
     {
@@ -91,6 +97,46 @@ public class MedicoDao
             // Preencher o comando
             int i = 1;
             tComandoJdbc.setInt(i++, pId);
+
+            // Executar o comando
+            ResultSet tResultSet = tComandoJdbc.executeQuery();
+
+            // Processar o resultado
+            if (tResultSet.next())
+            {
+                // Criando o objeto
+                Medico tMedico = recuperarMedico(tResultSet);
+
+                // Liberar os recursos
+                tResultSet.close();
+                tComandoJdbc.close();
+
+                // Retornando o objeto inserido
+                return tMedico;
+            }
+        }
+        catch (SQLException tExcept)
+        {
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do medico");
+        }
+
+        // Retorna null indicando algum erro de processamento
+        return null;
+    }
+
+    public Medico recoveryByCrm(int pCrm)
+    {
+        try
+        {
+            // Obter a conexão
+            Connection tConexao = Conexao.getConexao();
+
+            // Criar o comando
+            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoRecoveryByCrm);
+
+            // Preencher o comando
+            int i = 1;
+            tComandoJdbc.setInt(i++, pCrm);
 
             // Executar o comando
             ResultSet tResultSet = tComandoJdbc.executeQuery();
@@ -226,7 +272,51 @@ public class MedicoDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do medico");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa dos médicos");
+        }
+
+        // Retornando a lista de objetos
+        return tLista;
+    }
+
+    public List<Medico> searchByEspecialidade(String pEspecialidade)
+    {
+        // Acertando o critério de pesquisa
+        String tEspecialidade = "%" + pEspecialidade + "%";
+
+        List<Medico> tLista = new ArrayList<>();
+
+        try
+        {
+            // Obter a conexão
+            Connection tConexao = Conexao.getConexao();
+
+            // Criar o comando
+            PreparedStatement tComandoJdbc = tConexao.prepareStatement(comandoSearchByEspecialidade);
+
+            // Preencher o comando
+            int i = 1;
+            tComandoJdbc.setString(i++, tEspecialidade);
+
+            // Executar o comando
+            ResultSet tResultSet = tComandoJdbc.executeQuery();
+
+            // Processar o resultado
+            while (tResultSet.next())
+            {
+                Medico tMedico = recuperarMedico(tResultSet);
+
+                // Adicionar o o bjeto na lista
+                tLista.add(tMedico);
+            }
+
+            // Liberar os recursos
+            tResultSet.close();
+            tComandoJdbc.close();
+        }
+        catch (SQLException tExcept)
+        {
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa dos médicos por especialidade");
         }
 
         // Retornando a lista de objetos

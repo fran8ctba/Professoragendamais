@@ -276,7 +276,7 @@ public class PacienteDao
         }
         catch (SQLException tExcept)
         {
-            ExceptionUtil.mostrarErro(tExcept, "Problemas na criação do paciente");
+            ExceptionUtil.mostrarErro(tExcept, "Problemas na pesquisa dos pacientes");
         }
 
         // Retornando a lista de objetos
